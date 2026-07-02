@@ -1,0 +1,49 @@
+name: Build macOS app
+
+# Build the .app / .dmg on GitHub's macOS runners so you don't have to build
+# locally. Run it two ways:
+#   - Actions tab -> "Build macOS app" -> Run workflow   (download the artifact)
+#   - push a tag like v0.1.0                              (attaches .dmg to a Release)
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+jobs:
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # Both targets so the app runs on Apple Silicon AND Intel Macs.
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin,x86_64-apple-darwin
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Generate icons
+        run: npm run tauri icon app-icon.png
+
+      - name: Build universal .app + .dmg
+        run: npm run tauri build -- --target universal-apple-darwin
+
+      # Downloadable from the workflow run (requires being signed into GitHub).
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: storyboard-pacer-macos-dmg
+          path: src-tauri/target/universal-apple-darwin/release/bundle/dmg/*.dmg
+
+      # On a tag push, also publish a Release with a public download link.
+      - name: Attach .dmg to Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: src-tauri/target/universal-apple-darwin/release/bundle/dmg/*.dmg

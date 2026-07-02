@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Storyboard Pacer</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="top">
+        <h1>Storyboard <span>Pacer</span></h1>
+        <div class="stage-label" id="stageLabel">01 / LOAD FRAMES</div>
+      </header>
+
+      <!-- STEP 1: SETUP -->
+      <section class="panel" id="panelSetup">
+        <h2><span class="step-badge">1</span>Load your frames</h2>
+        <p class="sub">
+          Export your storyboard layers from Photoshop first
+          (<code>File → Export → Layers to Files</code>, numbered so they sort in
+          order), then choose that folder here.
+        </p>
+
+        <div class="dropzone" id="dropzone">
+          <div class="big">Choose your frames folder</div>
+          <div class="small">
+            PNG / JPG — sorted automatically by filename, drag chips below to
+            reorder
+          </div>
+        </div>
+
+        <div id="filmstripWrap" class="hidden">
+          <div class="folder-note" id="folderNote"></div>
+          <div class="filmstrip" id="filmstrip"></div>
+        </div>
+
+        <div class="field-row" style="margin-top: 24px">
+          <div class="field">
+            <label>Frame rate (fps)</label>
+            <input type="number" id="fpsInput" value="24" min="1" step="0.001" />
+          </div>
+          <div class="field">
+            <label>Sequence width</label>
+            <input type="number" id="widthInput" value="1920" min="1" />
+          </div>
+          <div class="field">
+            <label>Sequence height</label>
+            <input type="number" id="heightInput" value="1080" min="1" />
+          </div>
+        </div>
+
+        <div class="action-row">
+          <button class="primary" id="btnGoRecord" disabled>
+            Start recording pacing →
+          </button>
+        </div>
+      </section>
+
+      <!-- STEP 2: RECORD -->
+      <section class="panel hidden" id="panelRecord">
+        <h2><span class="step-badge">2</span>Record your pacing</h2>
+        <p class="sub">
+          Click through the frames at the speed you want them to play. The time
+          you spend on each one becomes its duration in the timeline.
+        </p>
+
+        <div class="record-layout">
+          <aside class="frame-queue">
+            <div class="queue-title">Up next</div>
+            <div class="queue-list" id="frameQueue"></div>
+          </aside>
+          <div class="record-stage">
+          <div class="record-frame-box">
+            <div class="rec-badge hidden" id="recBadge">
+              <span class="rec-dot"></span>REC
+            </div>
+            <img id="recordImg" src="" alt="frame" />
+          </div>
+
+          <div class="dial-row">
+            <div class="dial">
+              <svg width="88" height="88" viewBox="0 0 88 88">
+                <circle class="dial-track" cx="44" cy="44" r="38"></circle>
+                <circle
+                  class="dial-fill"
+                  id="dialFill"
+                  cx="44"
+                  cy="44"
+                  r="38"
+                  stroke-dasharray="238.76"
+                  stroke-dashoffset="238.76"
+                ></circle>
+              </svg>
+              <div class="dial-time" id="dialTime">0.0s</div>
+            </div>
+            <div class="frame-meta">
+              Frame <span class="cur" id="recIdx">–</span> /
+              <span id="recTotal">–</span><br />
+              <span id="recName">—</span>
+            </div>
+          </div>
+
+          <div class="record-controls">
+            <button class="secondary small" id="btnBack">← Back one frame</button>
+            <button class="primary" id="btnStart">Start</button>
+            <button class="primary hidden" id="btnNext">Next frame ›</button>
+            <button class="danger hidden" id="btnFinish">Finish recording</button>
+          </div>
+          <div class="key-hint" id="keyHint"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- STEP 3: REVIEW / EXPORT -->
+      <section class="panel hidden" id="panelReview">
+        <h2><span class="step-badge">3</span>Review timing &amp; export</h2>
+        <p class="sub">
+          Fine-tune any duration below, then export a Premiere-ready XML.
+        </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th></th>
+              <th>Frame</th>
+              <th>Duration (s)</th>
+              <th>Frames</th>
+              <th>Starts at</th>
+            </tr>
+          </thead>
+          <tbody id="reviewBody"></tbody>
+        </table>
+
+        <div class="totals-bar">
+          <div class="tot-item">Total runtime <b id="totRuntime">0:00.0</b></div>
+          <div class="tot-item">Total frames <b id="totFrames">0</b></div>
+          <div class="tot-item"><span id="totCount">0</span> storyboard frames</div>
+        </div>
+
+        <div class="action-row">
+          <button class="secondary" id="btnReRecord">Re-record pacing</button>
+          <button class="primary" id="btnExport">Export Premiere XML</button>
+        </div>
+      </section>
+
+      <!-- STEP 4: DONE -->
+      <section class="panel hidden" id="panelDone">
+        <h2><span class="step-badge">✓</span>Import into Premiere</h2>
+        <div class="instructions">
+          <ol>
+            <li>Open (or create) your Premiere Pro project.</li>
+            <li>
+              Go to <code>File → Import…</code> and select the exported
+              <code id="savedName">.xml</code> file.
+            </li>
+            <li>
+              Premiere will build a new sequence named
+              <code>Storyboard Animatic</code> with every frame already trimmed to
+              the duration you recorded.
+            </li>
+            <li>
+              The clips link to the images in the folder you loaded — keep that
+              folder in place, or use <code>Link Media</code> if you move it.
+            </li>
+          </ol>
+        </div>
+        <div class="action-row">
+          <button class="secondary" id="btnBackToReview">← Back to review</button>
+          <button class="primary" id="btnStartOver">Start a new storyboard</button>
+        </div>
+      </section>
+    </div>
+
+    <script src="main.js"></script>
+  </body>
+</html>
