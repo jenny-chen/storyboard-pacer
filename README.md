@@ -33,18 +33,6 @@ The download is a **universal** build — it runs on both Apple Silicon and Inte
 4. **Export** — save an FCP7/xmeml `.xml`. In Premiere Pro, `File → Import` it to
    get a sequence named **Storyboard Animatic** with each frame already trimmed.
 
-**Why:** Premiere's native still-image import gives every frame the *same* fixed
-duration. This produces per-frame timing that Premiere accepts via its supported
-XML import path. Exporting only ever writes the new `.xml` — your original frames
-are never modified.
-
-### Keyboard
-
-| Key | Action |
-| --- | --- |
-| <kbd>Space</kbd> / <kbd>→</kbd> / <kbd>↓</kbd> | Next frame (start / advance / finish) |
-| <kbd>Backspace</kbd> / <kbd>←</kbd> / <kbd>↑</kbd> | Back one frame |
-
 ## License
 
 MIT — see [LICENSE](LICENSE).
