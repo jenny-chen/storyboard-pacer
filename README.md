@@ -94,13 +94,15 @@ npm run build                      # -> src-tauri/target/release/bundle/{macos,d
 ├─ src/                               # frontend (no build step)
 │  ├─ index.html
 │  ├─ styles.css
-│  └─ main.js                         # tool logic + native dialog / file calls
+│  ├─ main.js                         # tool logic + native dialog / file calls
+│  ├─ crab.png                        # header logo
+│  └─ fonts/Inter.woff2               # bundled UI font (OFL)
 └─ src-tauri/                         # native shell
    ├─ Cargo.toml
    ├─ tauri.conf.json
    ├─ build.rs
    ├─ capabilities/default.json
-   └─ src/{main.rs,lib.rs}            # list_frames + save_file commands
+   └─ src/{main.rs,lib.rs}            # list_frames, save_file, open_in_premiere
 ```
 
 ## License

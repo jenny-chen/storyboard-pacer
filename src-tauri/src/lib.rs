@@ -48,11 +48,32 @@ fn save_file(path: String, contents: String) -> Result<(), String> {
     std::fs::write(&path, contents).map_err(|e| e.to_string())
 }
 
+/// Hand the exported XML to Premiere Pro (macOS). Tries to open it with
+/// Premiere; if Premiere isn't found, reveals the file in Finder instead so the
+/// user can `File -> Import` it manually.
+#[tauri::command]
+fn open_in_premiere(path: String) -> Result<(), String> {
+    use std::process::Command;
+    let launched = Command::new("open")
+        .args(["-a", "Adobe Premiere Pro", &path])
+        .status()
+        .map(|s| s.success())
+        .unwrap_or(false);
+    if !launched {
+        Command::new("open").args(["-R", &path]).status().ok();
+    }
+    Ok(())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
-        .invoke_handler(tauri::generate_handler![list_frames, save_file])
+        .invoke_handler(tauri::generate_handler![
+            list_frames,
+            save_file,
+            open_in_premiere
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

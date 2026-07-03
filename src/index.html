@@ -9,7 +9,10 @@
   <body>
     <div class="wrap">
       <header class="top">
-        <h1>Storyboard <span>Pacer</span></h1>
+        <div class="brand">
+          <img class="brand-icon" src="crab.png" alt="" />
+          <h1>Storyboard Pacer</h1>
+        </div>
         <div class="stage-label" id="stageLabel">01 / LOAD FRAMES</div>
       </header>
 
@@ -139,9 +142,12 @@
           <div class="tot-item"><span id="totCount">0</span> storyboard frames</div>
         </div>
 
-        <div class="action-row">
+        <div class="action-row review-actions">
           <button class="secondary" id="btnReRecord">Re-record pacing</button>
-          <button class="primary" id="btnExport">Export Premiere XML</button>
+          <div class="action-group">
+            <button class="secondary" id="btnOpenPremiere">Open in Premiere</button>
+            <button class="primary" id="btnExport">Export Premiere XML</button>
+          </div>
         </div>
       </section>
 

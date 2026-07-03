@@ -430,7 +430,9 @@
     return dir.endsWith(sep) ? dir + name : dir + sep + name
   }
 
-  $("btnExport").addEventListener("click", async () => {
+  // Save the XML (via native dialog). If openAfter is true, also hand it to
+  // Premiere Pro afterwards.
+  async function exportXml(openAfter) {
     const xml = buildXML()
     let target
     try {
@@ -452,8 +454,18 @@
     }
     const base = target.split(/[\\/]/).pop()
     $("savedName").textContent = base
+    if (openAfter) {
+      try {
+        await invoke("open_in_premiere", { path: target })
+      } catch (e) {
+        alert("Saved the XML, but couldn't launch Premiere: " + e)
+      }
+    }
     goToDone()
-  })
+  }
+
+  $("btnExport").addEventListener("click", () => exportXml(false))
+  $("btnOpenPremiere").addEventListener("click", () => exportXml(true))
 
   function goToDone() {
     show("panelDone")

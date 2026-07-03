@@ -1,3 +1,11 @@
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("fonts/Inter.woff2") format("woff2");
+}
+
 :root {
   --bg: #131210;
   --bg-panel: #1c1a16;
@@ -9,7 +17,7 @@
   --amber-dim: #6b551f;
   --red: #d6524a;
   --red-dim: #4a2320;
-  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 }
 * {
@@ -46,16 +54,24 @@ header.top {
   padding-bottom: 18px;
   margin-bottom: 28px;
 }
+header.top .brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+header.top .brand-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  display: block;
+}
 header.top h1 {
   font-family: var(--font-sans);
-  font-weight: 700;
-  font-size: 30px;
-  letter-spacing: 0.5px;
+  font-weight: 600;
+  font-size: 20px;
+  letter-spacing: 0;
   margin: 0;
-  text-transform: uppercase;
-}
-header.top h1 span {
-  color: var(--amber);
+  color: var(--text);
 }
 .stage-label {
   font-family: var(--font-mono);
@@ -281,10 +297,12 @@ button.small {
 .queue-title {
   font-family: var(--font-mono);
   font-size: 11px;
+  line-height: 14px;
+  height: 14px;
   text-transform: uppercase;
   letter-spacing: 1px;
   color: var(--text-dim);
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 .queue-list {
   display: flex;
@@ -358,10 +376,19 @@ button.small {
 .record-stage {
   flex: 1;
   min-width: 0;
+  /* Push the big current-frame down so its top lines up with the first
+     thumbnail in the sidebar (i.e. under the "Up next" label). 14px title
+     + 12px margin = 26px. */
+  padding-top: 26px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 22px;
+}
+@media (max-width: 680px) {
+  .record-stage {
+    padding-top: 0;
+  }
 }
 .record-frame-box {
   width: 100%;
@@ -561,6 +588,14 @@ td.tc {
   gap: 12px;
   justify-content: flex-end;
   margin-top: 22px;
+  flex-wrap: wrap;
+}
+.review-actions {
+  justify-content: space-between;
+}
+.action-group {
+  display: flex;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
